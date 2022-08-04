@@ -23,6 +23,6 @@ class DatabaseSeeder extends Seeder
 
         \App\Models\Customer::factory(20)->create();
         \App\Models\PurchaseTransaction::factory(50)->create();
-        \App\Models\Voucher::factory(20)->create();
+        \App\Models\Voucher::factory(1000)->create();
     }
 }
