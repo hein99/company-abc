@@ -27,3 +27,4 @@ use App\Http\Controllers\Api\CampaignController;
  * 
  */
 Route::get('/campaign/participate', [CampaignController::class, 'participate']);
+Route::post('/campaign/getVoucher', [CampaignController::class, 'getVoucher']);

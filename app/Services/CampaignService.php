@@ -34,7 +34,8 @@ class CampaignService
     public function enterCampaign()
     {
 
-        // Step 1
+        # Step 1
+        # Unlock all the locked down vouchers which are expired
         $this->unlockLockedDownExpiredVouchers();
         
         if(!$this->checkAvailableVoucher()) {
@@ -51,7 +52,7 @@ class CampaignService
 
         }
         
-        // Step 2
+        # Step 2
         if($error_message = $this->checkEligibilityToParticipate()) {
 
             return response()->json([
@@ -67,7 +68,7 @@ class CampaignService
 
         } 
 
-        // Step 3
+        # Step 3
         $this->lockDownAVoucher();
 
         return response()->json([
@@ -78,6 +79,68 @@ class CampaignService
             ],
         ], 200);
 
+    }
+
+    /**
+     * ------------------------
+     * function getVoucher()
+     * ----------------------
+     * 
+     */
+
+    public function getVoucher()
+    {
+        # Unlock all the locked down vouchers which are expired
+        $this->unlockLockedDownExpiredVouchers();
+
+        # Check whether a qualified photo or not
+        if($this->checkImage()) {
+
+            # Check whether locked down a voucher for customer
+            if($voucher = Voucher::where('customer_id', $this->customer->id)->first()) {
+
+                $voucher->status = 'redeemed';
+                $voucher->save();
+
+                return response()->json([
+                    'meta' => [
+                        'customer_id' => $this->customer->id,
+                        'success' => true,
+                        'message' => "Allocate the locked voucher to the customer with id " . $this->customer->id,
+                    ], 
+                    'data' => [
+                        'voucher_code' => $voucher->code,
+                    ],
+                ], 200);
+
+            } else {
+
+                return response()->json([
+                    'meta' => [
+                        'customer_id' => $this->customer->id,
+                        'success' => false,
+                    ],
+                    'errors' => [
+                        'code' => 1,
+                        'message' => "There is no locked down voucher for customer with id " . $this->customer->id . ". May be out of time.",
+                    ],
+                ], 200);
+            }
+
+        } else {
+
+            return response()->json([
+                'meta' => [
+                    'customer_id' => $this->customer->id,
+                    'success' => false,
+                ],
+                'errors' => [
+                    'code' => 2,
+                    'message' => "Photo of customer with id " . $this->customer->id . " is not qualified.",
+                ],
+            ], 200);
+
+        }
     }
 
     private function unlockLockedDownExpiredVouchers()
@@ -127,6 +190,16 @@ class CampaignService
         $voucher->locked_down_expired_at = date('Y-m-d H:i:s', strtotime("+10 minutes"));
         $voucher->save();
 
+    }
+
+    private function checkImage()
+    {
+        /**
+         * Using the image recognition API to specify whether a qualified photo or not
+         * 
+         */
+
+        return false;
     }
 
     
