@@ -106,7 +106,7 @@ class CampaignService
                     'meta' => [
                         'customer_id' => $this->customer->id,
                         'success' => true,
-                        'message' => "Allocate the locked voucher to the customer with id " . $this->customer->id,
+                        'message' => "Allocate the locked voucher to the customer with id " . $this->customer->id . ".",
                     ], 
                     'data' => [
                         'voucher_code' => $voucher->code,
@@ -199,7 +199,7 @@ class CampaignService
          * 
          */
 
-        return false;
+        return true;
     }
 
     

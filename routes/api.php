@@ -24,7 +24,7 @@ use App\Http\Controllers\Api\CampaignController;
  * Campaign Routes
  * ------------------
  * /campaign/participate is for Customer eligible check API
- * 
+ * /campaign/getVoucher is for Validate photo submission
  */
 Route::get('/campaign/participate', [CampaignController::class, 'participate']);
 Route::post('/campaign/getVoucher', [CampaignController::class, 'getVoucher']);
