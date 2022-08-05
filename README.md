@@ -17,7 +17,11 @@ cp .env.example .env
 ```sh
 php artisan key:generate
 ```
-5. Serve the application
+5. Create Database tables and insert dummny data(*Make sure database info in .env)
+```sh
+php artisan migrate:fresh --seed
+```
+6. Serve the application
 ```sh
 php artisan serve
 ```
